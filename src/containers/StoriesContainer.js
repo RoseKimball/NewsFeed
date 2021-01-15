@@ -1,30 +1,25 @@
 import React, {useEffect, useState, memo} from 'react';
-import { getStoryIds } from '../services/HackerNewsAPI';
+import { useQuery } from '@apollo/react-hooks';
+
 import Story from '../components/Story';
 import { GlobalStyle, StoriesContainerWrapper } from '../styles/StoriesContainerStyles';
 import { useInfiniteScroll } from '../hooks/UseInfiniteScroll';
+import { GET_ALL_ARTICLES } from '../graphql/get-all-articles';
+
 const StoriesContainer = () => {
-    const [storyIds, setStoryIds] = useState([])
     const { count } = useInfiniteScroll();
+    const { data: { allArticles = [] } = {} } = useQuery(GET_ALL_ARTICLES);
 
-    useEffect(() => {
-        console.log('count', count)
-        getStoryIds().then(data => setStoryIds(data))
-        
-    }, [count])
-
-    return (
-        <>
-            <GlobalStyle />
-            <StoriesContainerWrapper data-test-id='stories-container'>
-                <h1>Hacker News Stories</h1>
-                {storyIds.slice(0, count).map((storyId, i) => (
-                    <Story key={i} storyId={storyId}/>
-                ))}
-            </StoriesContainerWrapper>
-        </>
-    )
+	return (
+		<>
+			<GlobalStyle />
+			<StoriesContainerWrapper data-test-id='stories-container'>
+				<h1>Articles I recommend</h1>
+				{allArticles && allArticles.slice(0, 100).map((article) => <Story key={article.id} article={article}/>)}
+			</StoriesContainerWrapper>
+		</>
+	);
     
-}
+};
 
 export default StoriesContainer;

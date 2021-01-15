@@ -6,20 +6,20 @@ import { getStory } from '../services/HackerNewsAPI';
 
 
 beforeEach(() => {
-    cleanup();
-    jest.resetAllMocks();
+	cleanup();
+	jest.resetAllMocks();
 });
 
 jest.mock('../services/HackerNewsAPI', () => ({
-  getStory: jest.fn(),
+	getStory: jest.fn(),
 }));
 
 test('renders story component', async () => {
-  getStory.mockImplementation(() => Promise.resolve(singularStory));
+	getStory.mockImplementation(() => Promise.resolve(singularStory));
 
-  const { getByText, queryByTestId } = render(<Story storyId='1' />);
-  await waitForElement(() => [
-    queryByTestId('story'),
-    expect(queryByTestId('story-by').textContent).toEqual('By: Rose Kimball'),
-  ]);
+	const { getByText, queryByTestId } = render(<Story storyId='1' />);
+	await waitForElement(() => [
+		queryByTestId('story'),
+		expect(queryByTestId('story-by').textContent).toEqual('By: Rose Kimball'),
+	]);
 });
